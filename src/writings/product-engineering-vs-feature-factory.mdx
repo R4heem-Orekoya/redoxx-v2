@@ -5,54 +5,82 @@ date: 2026-01-20
 
 ## Product Engineering vs Feature Factory
 
-A feature factory ships tickets. A product engineer ships outcomes.
+There's a specific kind of exhaustion that comes from shipping a lot of code and feeling 
+like nothing matters. You close tickets. You hit sprint goals. Your velocity looks 
+great on paper. And yet, three months later, half the things you built are either 
+unused, quietly deprecated, or sitting in a backlog waiting to be "reworked."
+That's the feature factory in full operation.
 
-The difference is subtle but everything. One team measures velocity in story points. The other measures it in user impact.
+---
 
-## The Feature Factory
 
-You get a spec. You implement the spec. You move to the next ticket. There's no feedback loop, no ownership, no sense of whether any of it mattered.
+## The factory isn't malicious. It's structural.
 
-```ts
-// Feature factory mindset
-interface Ticket {
-   id: string;
-   description: string;
-   acceptanceCriteria: string[];
-   status: "todo" | "in_progress" | "done";
-}
+Nobody sits down and decides to build a company where engineers blindly implement specs 
+with no understanding of why. It happens gradually. A PM layer grows between engineering 
+and users. Tickets become the unit of communication. "Done" starts meaning "merged" 
+instead of "working in the hands of people who need it." Velocity, which was supposed 
+to be a rough internal planning heuristic, becomes the thing leadership actually cares about.
 
-function completeTicket(ticket: Ticket): void {
-   ticket.status = "done";
-   // Ship it. Next.
-}
-```
+And engineers adapt. Rationally. You optimize for what gets measured. You stop asking why — not 
+because you're incurious, but because asking why slows the ticket down and nobody upstream seems 
+to want that conversation anyway. You ship. You move on. You do it again.
 
-## The Product Engineer
+The tragedy isn't laziness. It's that genuinely talented engineers end up operating at a fraction 
+of their actual leverage.
 
-A product engineer asks why before they ask how. They push back on requirements that don't serve the user. They suggest simpler solutions.
+---
 
-```ts
-// Product engineering mindset
-interface Problem {
-   userNeed: string;
-   impact: "high" | "medium" | "low";
-   evidence: string[];
-}
+## A product engineer is playing a different game.
 
-function solveProblem(problem: Problem): Solution {
-   // Understand the user first
-   const context = gatherContext(problem);
-   // Find the simplest path
-   return designMinimalSolution(context);
-}
-```
+The difference isn't a personality type or a title. It's a question asked earlier in the process: 
+what problem are we actually solving?
 
-## How to Shift
+A product engineer, before touching a keyboard, wants to understand who's struggling with what, 
+and why the proposed solution addresses it. They're not obstinate — they're not trying to slow 
+things down for the sake of it. But they've internalized something important: the cost of building 
+the wrong thing well is higher than the cost of a slower conversation upfront.
 
-1. Talk to users, not just PMs
-2. Question every requirement
-3. Measure what matters
-4. Own the outcome, not just the code
+This shows up in small ways. A product engineer looks at a spec and asks what's driving a particular 
+requirement. They notice when a feature request is actually a symptom of a deeper UX problem that a 
+simpler change would solve. They push back — not aggressively, but thoughtfully — on scope that doesn't 
+serve the user. They treat simplicity as a feature, not a shortcut.
 
-A product engineer doesn't just build what they're told. They build what's right.
+And crucially, they stay invested after launch. They look at the analytics. They talk to users. They 
+notice when something isn't landing, and they bring that signal back into the process instead of 
+considering their job done at merge.
+
+---
+
+## The feedback loop is the whole thing.
+
+What separates the two mindsets isn't really the code — it's the relationship with outcomes. Feature 
+factory engineers are insulated from whether their work mattered. Product engineers close that loop on purpose.
+
+This doesn't require a fancy process or a new framework. It often just means: find ways to get your work in front 
+of real users, watch them use it, and let what you see change how you build. Talk to the people in support who 
+hear from frustrated users. Read the session recordings. Sit in on a customer call. Build the habit of caring 
+about what happens after the PR gets merged.
+
+The engineers who do this tend to get better faster, not just because of feedback volume, but because the 
+feedback is about the right things. You stop getting good at closing tickets and start getting good at solving problems.
+
+---
+
+## On shifting, if you're in a factory right now
+
+The honest answer is that some of this is on you, and some of it is structural, and you can't always fix the structural 
+parts from an IC role. But you can:
+
+Start asking why on every significant ticket, even if just to yourself. Build a model of the user problem it's meant to 
+solve before you start the implementation. That model will make your work better regardless of whether anyone else asked for it.
+
+Find the people in your company — in support, sales, design, wherever — who are closest to users, and get their perspective 
+regularly. You don't need a process for this. You just need to be curious.
+
+And when you ship something, check on it. Not obsessively, but deliberately. Did it do what you hoped? If not, why not? 
+Carry that forward.
+
+The shift from feature factory to product engineering isn't a single decision. It's a slow reorientation toward caring 
+about the whole chain — from the problem in front of a user to the code running on a server. That care is what separates 
+engineers who are interchangeable from engineers who are genuinely hard to replace.
