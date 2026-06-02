@@ -1,0 +1,136 @@
+---
+title: The JWT Cargo Cult
+date: 2026-06-02
+---
+
+## The JWT Cargo Cult: Why Your Web App Probably Doesn't Need Them
+
+Every engineering team I've joined as a frontend developer has made the same decision
+before I arrived. You open the codebase, find the auth module, and there it is: access
+token, refresh token, both JWTs, stored in localStorage or an HttpOnly cookie, with some
+refresh rotation logic that someone copy-pasted from a Medium article three years ago.
+
+Nobody questions it. It's just what you do.
+
+But here's the thing that nobody seems to want to sit with: for most web applications,
+this was the wrong call.
+
+---
+
+## What JWT was actually built for
+
+JWT wasn't originally built for authentication at all. It was created to provide a standard way
+for two parties to securely exchange information. The spec — RFC 7519, which came out of the
+OAuth working group in 2015 — describes a compact, self-contained token for passing claims
+between systems. Think of it like a signed letter: the recipient doesn't need to call anybody
+to verify it's real, because the cryptographic signature says it all.
+
+The actual home for JWT is cross-service and cross-domain authorization — situations where one
+service needs to verify a token issued by another, which is what makes it well-suited for
+microservices architectures. More precisely, JWT shines in OAuth 2.0 flows: when a client
+authenticates, the server issues a JWT that can then be used to authorize access across multiple
+applications — enabling things like social login and SSO across different domains using a single verifiable token.
+
+That's the use case. Service A issues a token. Service B, C, and D all verify it independently 
+without talking to each other or to a central session store. That's genuinely powerful, and 
+JWT solves it elegantly.
+
+Now ask yourself: is that what your app is doing? Or do you just have a React frontend talking to one backend?
+
+---
+
+## The revocation problem nobody talks about until it's a problem
+
+The core value proposition of JWT — the thing everyone cites when defending the choice — is statelessness. 
+The server doesn't need to store anything. Validation is a cryptographic operation that happens locally without 
+any database lookups, which improves scalability and eliminates latency from session checks.
+
+That's real. But it comes with a trade-off that tends to get buried in the documentation.
+
+Once you issue a JWT, and it gets into the hands of a client, that token will be valid until its expiration time. 
+You can tell the user to "log out" from the server if you want, but the token is still valid. If a hacker steals 
+that token, the server doesn't know they shouldn't have access.
+
+Read that again. Logout, as most users understand it — "I clicked log out, I'm logged out" — doesn't actually work 
+with stateless JWTs. You can delete the token from the client. But the token itself, floating out there, is still 
+cryptographically valid.
+
+Unlike session-based authentication, where sessions can be invalidated by simply removing them from the server, 
+JWTs remain valid until their expiration time is embedded within the token's payload. The only real workarounds 
+are keeping tokens short-lived (5–15 minutes) and building a token blacklist — but a blacklist means you're now 
+storing state on the server anyway, which defeats the entire premise.
+
+Some teams maintain revocation lists, which reintroduces statefulness. Others accept the risk window between revocation 
+and token expiry. Most teams pick one of these options and just don't tell anyone about the tradeoff.
+
+---
+
+## The refresh token dance
+
+The standard response to short-lived access tokens is the refresh token pattern. Access token expires in 15 minutes. 
+Refresh token lives for days or weeks. When the access token expires, you silently hit a `/refresh` endpoint to get a new one.
+
+As a frontend developer, this is yours to manage. You have to intercept 401 responses, queue the original request, 
+fire the refresh, retry the queue, handle the case where the refresh itself has expired, and redirect to login without 
+losing the user's state. You have to think about what happens when two requests expire simultaneously and both try to 
+refresh at the same time. You also have to handle the refresh token being stolen.
+
+None of this is impossible. Libraries exist. But it's real complexity that you're carrying — complexity that sessions don't have, 
+because session invalidation is just a server-side delete.
+
+---
+
+## What sessions actually give you
+
+Session-based auth is old. That makes people feel like it's inferior. It isn't.
+
+When a user logs in, the server creates a session record in a database or cache, 
+generates an opaque ID, and sends that ID to the browser in an HttpOnly cookie. 
+On every request, the browser sends the cookie, the server looks up the session, 
+and if it exists, the user is authenticated. That's it.
+
+Logout is immediate. The server deletes the session record. The cookie is now worthless. 
+No grace periods, no revocation lists, no token blacklists. If a session gets compromised, 
+you invalidate it. If you want to force all sessions for a user to expire — say, they 
+reported their account as compromised — you delete all their session records. One line.
+
+The scalability argument against sessions is real but often overstated for the typical product. 
+Yes, if you have a thousand horizontally-scaled API servers and no shared cache layer, sessions 
+get complicated. But if you're using Redis or a similar cache — which most teams are anyway — 
+sessions scale fine. And you likely have Redis already, because it's your rate limiter, your queue 
+backend, your feature flag store. The "sessions don't scale" argument was written by people building 
+Twitter-scale infrastructure, and it got cargo-culted into teams building dashboards with 300 active users.
+
+---
+
+## Why JWT became the default anyway
+
+Part of it is tutorials. The dominant auth tutorials for SPAs, mobile apps, and REST APIs all default to JWT. 
+You build your first side project, you follow the tutorial, and JWT becomes what "auth" means to you. 
+By the time you're on a team making architectural decisions, it's just the assumed choice.
+
+Part of it is that JWT sounds more sophisticated. "We use stateless token-based authentication with a refresh 
+rotation strategy" is a longer sentence than "we use sessions," and longer sentences sometimes win architecture 
+discussions.
+
+Part of it is that JWT genuinely is the right call in some cases — third-party integrations, OAuth flows, 
+microservice meshes — and that legitimacy gets generalized beyond the cases that earned it.
+
+And part of it is that the problems with JWT don't always surface. If your app has low security requirements, 
+short sessions, and users who don't really log out, you might never hit the revocation issue. The code works. 
+Nothing breaks. The choice gets hardened into institutional practice, and the next team inherits it without the context.
+
+---
+
+## The honest answer
+
+If you're building a web app where users log in, do things, and log out — a standard user-facing product — sessions are almost 
+certainly the simpler, more correct choice. They're easier to reason about, easier to implement correctly, easier to revoke, 
+and they don't push significant complexity onto the frontend.
+
+JWT makes sense when you're actually operating across service boundaries: third-party API consumers, OAuth providers, microservice 
+authorization, machine-to-machine flows. That's the context it was designed for.
+
+The question worth asking on your next project, before the auth module gets written, is: which one of those things are we actually building?
+
+Most of the time, the honest answer is the one that doesn't need a refresh token queue.

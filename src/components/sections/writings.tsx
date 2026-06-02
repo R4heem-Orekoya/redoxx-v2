@@ -17,19 +17,19 @@ export default function Writings() {
          </div>
 
          <div className="space-y-6">
-             {writings.map((writing) => (
+            {writings.map((writing) => (
                <Link
                   href={`/writing/${writing.slug}`}
                   key={writing.slug}
-                  className="flex justify-between items-center max-sm:flex-col max-sm:items-start max-sm:gap-1 group"
+                  className="flex items-center justify-between gap-4 max-sm:flex-col max-sm:items-start max-sm:gap-1 group"
                >
-                  <span className="text-sm text-muted-foreground font-mono">
+                  <span className="text-sm text-muted-foreground font-mono shrink-0">
                      {writing.date}
                   </span>
-                  <span className="font-medium group-hover:text-blue-500 duration-150 underline-offset-2">
+                  <span className="font-medium group-hover:text-blue-500 duration-150 flex-1 text-left sm:ml-16 line-clamp-1">
                      {writing.title}
                   </span>
-                  <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-mono">
+                  <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-mono shrink-0">
                      <HugeiconsIcon icon={Clock4Icon} className="size-4" />
                      <span>{writing.readingTime} m</span>
                   </div>
