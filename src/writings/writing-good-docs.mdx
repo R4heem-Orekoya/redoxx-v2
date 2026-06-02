@@ -1,0 +1,65 @@
+---
+title: Writing Good Documentation
+date: 2026-05-15
+---
+
+## Writing Good Documentation
+
+Nobody wakes up excited to write docs. But great engineers write them anyway. Here's my approach.
+
+## Why Docs Matter
+
+Every undocumented feature becomes a question. Every question becomes an interruption. Every interruption costs context.
+
+A team of five losing 15 minutes each to context switching loses over 300 hours a year. Documentation is leverage.
+
+## The Formula
+
+Good docs follow a simple structure:
+
+1. **What** — What does this thing do? (One sentence)
+2. **Why** — Why does it exist? (Three sentences max)
+3. **How** — How do you use it? (With examples)
+4. **Gotchas** — What will go wrong? (Be honest)
+
+```ts
+/**
+ * Calculates the weighted score for a feature request.
+ *
+ * Combines popularity, recency, and strategic alignment
+ * into a single priority score for backlog sorting.
+ *
+ * @example
+ * const score = calculateScore({
+ *   upvotes: 42,
+ *   createdAt: "2026-05-01",
+ *   strategic: true,
+ * });
+ * // score → 87.3
+ *
+ * @remarks
+ * The recency factor decays by 5% per week.
+ * Strategic alignment adds a flat 20 points.
+ */
+function calculateScore(input: {
+   upvotes: number;
+   createdAt: string;
+   strategic: boolean;
+}): number {
+   let score = input.upvotes * 0.5;
+   const weeksAgo = weeksSince(input.createdAt);
+   score *= Math.pow(0.95, weeksAgo);
+   if (input.strategic) score += 20;
+   return Math.round(score * 10) / 10;
+}
+```
+
+## When to Document
+
+- Before shipping a new feature
+- When someone asks a question twice
+- When you debug something non-obvious
+
+> The best documentation is written by the person who least wants to write it — because they understand the pain of not having it.
+
+Write the docs your future self will thank you for.

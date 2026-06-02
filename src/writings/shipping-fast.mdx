@@ -1,0 +1,49 @@
+---
+title: Shipping Fast Without Breaking Things
+date: 2026-04-02
+---
+
+## Shipping Fast Without Breaking Things
+
+Speed is a feature. But shipping fast and shipping broken are not the same thing. Here's the system I use to move quickly without waking up at 3 AM.
+
+## Feature Flags
+
+Everything goes behind a flag. Not just big launches, everything.
+
+```go
+type FeatureFlag struct {
+	Name    string
+	Enabled bool
+	Users   []string
+}
+
+func (f *FeatureFlag) IsActive(user *User) bool {
+	if f.Enabled {
+		return true
+	}
+	for _, id := range f.Users {
+		if id == user.ID {
+			return true
+		}
+	}
+	return false
+}
+```
+
+## The Release Process
+
+- **Day 1**: Behind flag, internal testing
+- **Day 2**: Flag open to 10% of users
+- **Day 3**: Monitor metrics, check for regressions
+- **Day 4**: Full rollout or kill
+
+If a feature isn't ready to ship on Day 4, it gets killed. No sunk cost.
+
+## Monitoring Over Testing
+
+Unit tests catch regressions. Monitoring catches reality. I've found that investing in good dashboards and alerts pays back ten times what exhaustive testing does.
+
+> Move fast and monitor things.
+
+The goal isn't zero bugs. The goal is zero surprises.

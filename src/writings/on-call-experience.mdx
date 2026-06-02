@@ -1,0 +1,40 @@
+---
+title: What Being On-Call Taught Me
+date: 2026-06-01
+---
+
+## What Being On-Call Taught Me
+
+Six months of primary on-call. Zero sleep, lots of pagers, and a few hard-won lessons.
+
+## Downtime is Inevitable
+
+No matter how good your tests are, production will find a way to break. The question isn't _if_ something will fail, but _how fast_ you can recover.
+
+## The Runbook Mindset
+
+Every incident I resolved, I wrote down exactly what I did. Over time, those notes became runbooks. And those runbooks became the difference between a 10-minute outage and a 60-minute one.
+
+```yaml
+runbook:
+  service: auth-api
+  symptoms:
+    - "5xx errors > 1%"
+    - "latency p99 > 2s"
+  steps:
+    - check: "Dashboard: auth-api-error-rate"
+    - action: "Rollback last deploy"
+      command: "kubectl rollout undo deployment/auth-api"
+    - verify: "Error rate drops below threshold"
+    - escalate: "If still failing, ping #infra"
+```
+
+## What I Learned
+
+- **Alert fatigue is real** — Only page for things the engineer can actually fix
+- **Post-mortems should be blameless** — Root cause is almost always systemic
+- **Sleep is not optional** — A tired engineer makes worse decisions than a broken system
+
+> The goal of on-call isn't to prevent every incident. It's to make every incident boring.
+
+Boring incidents mean you have good runbooks, good monitoring, and a team that knows what to do.

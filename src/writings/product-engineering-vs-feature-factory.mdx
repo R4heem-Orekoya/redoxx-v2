@@ -1,0 +1,58 @@
+---
+title: Product Engineering vs Feature Factory
+date: 2026-01-20
+---
+
+## Product Engineering vs Feature Factory
+
+A feature factory ships tickets. A product engineer ships outcomes.
+
+The difference is subtle but everything. One team measures velocity in story points. The other measures it in user impact.
+
+## The Feature Factory
+
+You get a spec. You implement the spec. You move to the next ticket. There's no feedback loop, no ownership, no sense of whether any of it mattered.
+
+```ts
+// Feature factory mindset
+interface Ticket {
+   id: string;
+   description: string;
+   acceptanceCriteria: string[];
+   status: "todo" | "in_progress" | "done";
+}
+
+function completeTicket(ticket: Ticket): void {
+   ticket.status = "done";
+   // Ship it. Next.
+}
+```
+
+## The Product Engineer
+
+A product engineer asks why before they ask how. They push back on requirements that don't serve the user. They suggest simpler solutions.
+
+```ts
+// Product engineering mindset
+interface Problem {
+   userNeed: string;
+   impact: "high" | "medium" | "low";
+   evidence: string[];
+}
+
+function solveProblem(problem: Problem): Solution {
+   // Understand the user first
+   const context = gatherContext(problem);
+   // Find the simplest path
+   return designMinimalSolution(context);
+}
+```
+
+## How to Shift
+
+1. Talk to users, not just PMs
+2. Question every requirement
+3. Measure what matters
+4. Own the outcome, not just the code
+
+A product engineer doesn't just build what they're told. They build what's right.

@@ -1,0 +1,113 @@
+---
+title: MDX Components
+date: 2026-06-02
+---
+
+## MDX Components
+
+MDX lets you import and use React components directly inside your markdown. This writing demonstrates the pattern — the component below is imported inline.
+
+import Note from "@/components/note"
+import YouTubeEmbed from "@/components/youtube-embed"
+import { Table, TableHead, TableHeader, TableBody, TableRow, TableCell } from "@/components/table"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+
+<Note type="info">
+
+MDX components are imported just like in any React file. This note is a custom component with support for `info`, `warning`, `tip`, and `note` variants.
+
+</Note>
+
+### Tooltip
+
+Hover over the underlined text below to see the tooltip component in action:
+
+<Tooltip>
+   <TooltipTrigger className="underline decoration-dotted underline-offset-4 cursor-help text-muted-foreground hover:text-foreground transition-colors">
+      MDX
+   </TooltipTrigger>
+   <TooltipContent side="top" showArrow={false} className="bg-secondary text-foreground">
+      Markdown + JSX
+   </TooltipContent>
+</Tooltip>
+
+<Note type="tip">
+
+Tooltips are great for adding extra context without cluttering the reading flow.
+
+</Note>
+
+<Note type="warning">
+
+Keep interactive components intentional — too many can distract from the reading experience.
+
+</Note>
+
+### Code
+
+Inline code like `remark-frontmatter` and code blocks work as usual:
+
+```json
+{
+   "remarkPlugins": [
+      "remark-frontmatter",
+      "remark-mdx-frontmatter"
+   ]
+}
+```
+
+<Note>
+
+Components and markdown mix naturally — you can put a note right beside a code block without breaking the flow.
+
+</Note>
+
+### Table
+
+The custom Table component with hover states and matching border styles:
+
+<Table>
+   <TableHead>
+      <TableHeader>Component</TableHeader>
+      <TableHeader>Type</TableHeader>
+      <TableHeader>Use case</TableHeader>
+   </TableHead>
+   <TableBody>
+      <TableRow>
+         <TableCell>`Note`</TableCell>
+         <TableCell>Server</TableCell>
+         <TableCell>Callouts, warnings, tips</TableCell>
+      </TableRow>
+      <TableRow>
+         <TableCell>`Tooltip`</TableCell>
+         <TableCell>Client</TableCell>
+         <TableCell>Hover context</TableCell>
+      </TableRow>
+      <TableRow>
+         <TableCell>`YouTubeEmbed`</TableCell>
+         <TableCell>Server</TableCell>
+         <TableCell>Video embeds</TableCell>
+      </TableRow>
+      <TableRow>
+         <TableCell>`Table`</TableCell>
+         <TableCell>Server</TableCell>
+         <TableCell>Data display</TableCell>
+      </TableRow>
+   </TableBody>
+</Table>
+
+<Note type="tip">
+
+The Table component wraps a semantic HTML table with the site's border, secondary background on the header, and row hover states.
+
+</Note>
+
+### YouTube embed
+
+The component below wraps a YouTube video in a styled container with the same border and radius as other elements on the site:
+
+<YouTubeEmbed id="dQw4w9WgXcQ" title="YouTube embed example" />
+
+---
+
+That covers the basics. Any component in the codebase can be imported into a writing — the only boundary is `"use client"` for interactive components.
