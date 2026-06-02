@@ -21,7 +21,9 @@ export function getWritings() {
                month: "short",
                day: "numeric",
             }),
+            rawDate: new Date(data.date),
             readingTime,
          };
-      });
+      })
+      .sort((a, b) => b.rawDate.getTime() - a.rawDate.getTime());
 }
