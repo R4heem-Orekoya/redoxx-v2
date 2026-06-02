@@ -3,7 +3,6 @@ import P1Image from "../../../public/p1.webp";
 import P1Back from "../../../public/p1-back.webp";
 import P1Wings from "../../../public/p1-wings.webp";
 import P1In from "../../../public/p1-in.webp";
-import { Heart } from "lucide-react";
 import { NowPlaying } from "../now-playing";
 import { DashboardSpeed02Icon, EngineIcon, HeartIcon, HorseHeadIcon, Timer02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
