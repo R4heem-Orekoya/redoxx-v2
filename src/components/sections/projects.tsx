@@ -2,7 +2,6 @@ import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
-import ProjectImage from "../../../public/download.jpeg";
 import ShevonImage from "../../../public/shevon.png";
 
 export default function Projects() {
