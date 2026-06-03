@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import QueryProvider from "./query-provider";
 import { ThemeProvider } from "./theme-provider";
-import { TooltipProvider } from "../ui/tooltip";
+import { TooltipProvider } from "../components/ui/tooltip";
 
 export default function Providers({ children }: PropsWithChildren<{}>) {
    return (

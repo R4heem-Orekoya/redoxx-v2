@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next"
 import { Geist_Mono, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import Providers from "@/components/providers";
+import Providers from "@/providers";
 import Footer from "@/components/sections/footer";
 
 const inter = Inter({
@@ -15,9 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 const jetbrain = JetBrains_Mono({
-   subsets: ['latin'],
-   variable: '--font-jetbrain',
-})
+   subsets: ["latin"],
+   variable: "--font-jetbrain",
+});
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "localhost:3000";
 const SITE_URL = BASE_URL.startsWith("http") ? BASE_URL : `https://${BASE_URL}`;
@@ -76,6 +77,7 @@ export default function RootLayout({
                <Footer />
             </Providers>
          </body>
+         <Analytics />
       </html>
    );
 }
