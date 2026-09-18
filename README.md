@@ -27,6 +27,9 @@ Open [http://localhost:3000](http://localhost:3000).
 pnpm build
 ```
 
+## TODO
+[] use the project live url to fetch the project og image and use that for the preview image if no preview image present fallback to the provided image in the codebase 
+
 ## License
 
 MIT

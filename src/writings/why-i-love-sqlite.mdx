@@ -1,0 +1,24 @@
+---
+title: Why I Love Sqlite (WIP)
+date: 2026-09-10
+---
+
+This article is still a work in progress. 
+
+## SQLite Is Quietly One of the Best Pieces of Software Ever Written
+
+Every few months I stumble across something SQLite can do that makes me stop and go — wait, this thing can do that?
+
+This week it was full-text search. Not a plugin. Not a separate service. Not a new dependency to install and configure and keep alive. Just a virtual table you define, and suddenly your .db file can rank documents, handle boolean queries, and spit out highlighted excerpts — using the same BM25 algorithm that powers Elasticsearch.
+
+That's when I decided I needed to write this.
+
+---
+
+## It's a file. That's the whole point.
+
+The thing people miss about SQLite is that "it's just a file" isn't a limitation — it's the design. Your database is a single, portable, self-contained `.db` file that you can copy, back up, open in a GUI, diff, version-control, and hand to someone else. There's no server process, no connection pool to tune, no auth config to get wrong.
+
+For the kind of products I build — solo, moving fast, deploying on a tight budget — this matters enormously. I'm not running a hyperscaler. I don't need one. SQLite lets me skip an entire class of infrastructure problems and spend that time on the product instead.
+
+And here's the thing: the tradeoff is smaller than people think. SQLite handles multiple readers concurrently just fine, writes are serialized but fast, and WAL mode gets you surprisingly close to what you'd expect from a client-server DB in practice. For most apps, you will never hit the ceiling.
